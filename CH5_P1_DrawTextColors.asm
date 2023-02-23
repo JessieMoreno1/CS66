@@ -20,15 +20,18 @@ INCLUDE Irvine32.inc
 ExitProcess proto,dwExitCode:dword
 
 .data
-	string BYTE "JESSIE",0	; this is the string we will change the color of
+	string BYTE "JESSIE",0Dh, 0Ah, 0	; this is the string we will change the color of
 
 .code
-main proc
-	mov eax, black + (white * 16) 	
-	call SetTextColor
-	mov edx, OFFSET string
-	call WriteString
-	add eax, 1
+main proc ; currently working without the loop implementation 
+	mov ecx, 4
+	L1: 
+		mov eax, black + (white * 16) 	
+		call SetTextColor
+		mov edx, OFFSET string
+		call WriteString
+		inc eax
+		loop L1
 
 	invoke ExitProcess,0
 main endp
