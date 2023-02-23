@@ -1,2 +1,2 @@
 # CS66
-Assignments related to Assembly Language taught by Sassan Barkeshli in Pasadena City College
+Assignments related to Assembly Language taught by Sassan Barkeshli at Pasadena City College
