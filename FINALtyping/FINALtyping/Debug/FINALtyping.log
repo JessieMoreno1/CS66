@@ -1,0 +1,3 @@
+﻿  Assembling AddTwo.asm...
+AddTwo.asm(8): warning A4011: multiple .MODEL directives found : .MODEL ignored
+  FINALtyping.vcxproj -> C:\Users\jessiemejia\source\repos\FINALtyping\Debug\FINALtyping.exe
