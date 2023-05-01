@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.34.31937.0	    04/28/23 14:20:17
+Microsoft (R) Macro Assembler Version 14.34.31937.0	    04/30/23 17:51:58
 AddTwo.asm						     Page 1 - 1
 
 
@@ -28,127 +28,162 @@ AddTwo.asm						     Page 1 - 1
 			      C .LIST
 			      C 
 
-				.386
-				.model flat,stdcall
-AddTwo.asm(8) : warning A4011:multiple .MODEL directives found : .MODEL ignored
-				.stack 4096
-				ExitProcess proto,dwExitCode:dword
-
  00000000			.data
- 00000000 6A 65 73 73 69		prompt		BYTE		"jessie", 0			; working	
+ 00000000 6A 65 73 73 69		prompt			BYTE		"jessie", 0			; working	
 	   65 00
- 00000007 32				promptX		BYTE		50
- 00000008 00				promptY		BYTE		0
+ 00000007 61 73 73 65 6D		prompt2			BYTE		"assembly language", 0
+	   62 6C 79 20 6C
+	   61 6E 67 75 61
+	   67 65 00
+ 00000019 41 73 73 65 6D		prompt3			BYTE		"Assembly language is such a pain, I miss C plus plus",0
+	   62 6C 79 20 6C
+	   61 6E 67 75 61
+	   67 65 20 69 73
+	   20 73 75 63 68
+	   20 61 20 70 61
+	   69 6E 2C 20 49
+	   20 6D 69 73 73
+	   20 43 20 70 6C
+	   75 73 20 70 6C
+	   75 73 00
+ 0000004E 32				promptX			BYTE		50
+ 0000004F 00				promptY			BYTE		0
+ 00000050 06				promptSize		BYTE		6
 
- 00000009  00000032 [			storedLetter	BYTE		50 DUP (?)
+ 00000051  00000032 [			storedLetter		BYTE		50 DUP (?)
 	    00
 	   ]
- 0000003B 32				storedLetterX	BYTE		50
- 0000003C 00				storedLetterY	BYTE		0
+					
+ 00000083 00				storedLetterSize	BYTE		?
  00000000			.code
  00000000			main proc
-					; in charge of positioning text at the top 
-					;mov bh, 50
-					;mov bl, 0
-					mGotoxy promptX, promptY
- 00000000  52		     1		push edx
- 00000001  8A 35 00000008 R  1		mov  dh,promptY
- 00000007  8A 15 00000007 R  1		mov  dl,promptX
- 0000000D  E8 00000000 E     1		call Gotoxy
- 00000012  5A		     1		pop  edx
-
-					; writes string onto the console window
-					mWriteString prompt						; working
- 00000013  52		     1		push edx
- 00000014  BA 00000000 R     1		mov  edx,OFFSET prompt
- 00000019  E8 00000000 E     1		call WriteString
- 0000001E  5A		     1		pop  edx
-
 					
-						
- 0000001F  B9 00000007			mov ecx, SIZEOF prompt
- 00000024  BE 00000000			mov esi, 0
-
-					; need a continuous loop for ReadKey
- 00000029				checkInput:						; working
-						 
- 00000029  B8 000005DC				mov eax, 1500					; needed for delay
- 0000002E  E8 00000000 E			call Delay
- 00000033  E8 00000000 E			call ReadKey						; working
-						
- 00000038  E8 00000000 E			call Clrscr
- 0000003D  FE 05 00000008 R			inc promptY
- 00000043  FE 05 0000003C R			inc storedLetterY
-
-						mGotoxy promptX, promptY
- 00000049  52		     1		push edx
- 0000004A  8A 35 00000008 R  1		mov  dh,promptY
- 00000050  8A 15 00000007 R  1		mov  dl,promptX
- 00000056  E8 00000000 E     1		call Gotoxy
- 0000005B  5A		     1		pop  edx
-						mWriteString prompt
- 0000005C  52		     1		push edx
- 0000005D  BA 00000000 R     1		mov  edx,OFFSET prompt
- 00000062  E8 00000000 E     1		call WriteString
- 00000067  5A		     1		pop  edx
-
- 00000068  3C 01				cmp al, 1
- 0000006A  7E BD				jle checkInput
-						
- 0000006C  3A 86 00000000 R			cmp al, prompt[esi]	
- 00000072  74 04				je matching
-
-					
- 00000074  3C 1B				cmp al, 27d						; check if user wants to quit
-
-						
-
-						
-						
- 00000076  75 B1				jne checkInput
-						
-
-						
-
- 00000078				matching:
- 00000078  50					push eax
-						
-						mGotoxy storedLetterX, storedLetterY
- 00000079  52		     1		push edx
- 0000007A  8A 35 0000003C R  1		mov  dh,storedLetterY
- 00000080  8A 15 0000003B R  1		mov  dl,storedLetterX
- 00000086  E8 00000000 E     1		call Gotoxy
- 0000008B  5A		     1		pop  edx
-
- 0000008C  88 86 00000009 R			mov storedLetter[esi], al
-
- 00000092  B8 00000002				mov eax, green
- 00000097  E8 00000000 E			call SetTextColor
-						;mWriteString OFFSET prompt
-						mWriteString OFFSET storedLetter
- 0000009C  52		     1		push edx
- 0000009D  BA 00000009 R     1		mov  edx,OFFSET OFFSET storedLetter
- 000000A2  E8 00000000 E     1		call WriteString
- 000000A7  5A		     1		pop  edx
-
- 000000A8  46					inc esi
-
- 000000A9  58					pop eax
-
- 000000AA  B8 0000000F				mov eax, white
- 000000AF  E8 00000000 E			call SetTextColor
-
- 000000B4  E9 FFFFFF70				jmp checkInput
+ 00000000  BE 00000000			mov esi, 0					; counter 
 					
 
+ 00000005				gameLoop:
+ 00000005  E8 00000000 E			call clrscr
 
-					
+						;Print original string
+ 0000000A  B8 0000000F				mov eax, white
+ 0000000F  E8 00000000 E			call setTextColor
+						mGoToXY promptX, promptY
+ 00000014  52		     1		push edx
+ 00000015  8A 35 0000004F R  1		mov  dh,promptY
+ 0000001B  8A 15 0000004E R  1		mov  dl,promptX
+ 00000021  E8 00000000 E     1		call Gotoxy
+ 00000026  5A		     1		pop  edx
+						mWriteString OFFSET prompt
+ 00000027  52		     1		push edx
+ 00000028  BA 00000000 R     1		mov  edx,OFFSET OFFSET prompt
+ 0000002D  E8 00000000 E     1		call WriteString
+ 00000032  5A		     1		pop  edx
+
+						;Print Cover				; this is the colored text
+ 00000033  B8 0000000A				mov eax, lightGreen
+ 00000038  E8 00000000 E			call setTextColor
+						mGoToXY promptX, promptY
+ 0000003D  52		     1		push edx
+ 0000003E  8A 35 0000004F R  1		mov  dh,promptY
+ 00000044  8A 15 0000004E R  1		mov  dl,promptX
+ 0000004A  E8 00000000 E     1		call Gotoxy
+ 0000004F  5A		     1		pop  edx
+ 00000050  BA 00000051 R			mov edx, OFFSET storedLetter
+ 00000055  E8 00000000 E			call WriteString
+
+						
+ 0000005A  80 3D 0000004F R			cmp promptY, 25
+	   19
+ 00000061  7E 22				jle fall
+
+
+ 00000063  8A 1D 00000050 R			mov bl, [promptSize]
+ 00000069  A0 00000083 R			mov al, [storedLetterSize]
+
+ 0000006E  3A 1D 00000083 R			cmp bl, [storedLetterSize]
+ 00000074  75 29				jne acceptInput
+
+ 00000076  E8 00000093				call killprompt			; clears the original string 
+ 0000007B  E8 00000071				call clearStoredLetter		; clears the cover string (Color string)
+						
+						
+
+ 00000080  E8 00000000 E			call clrscr
+
+ 00000085					fall:
+ 00000085  B8 0000012C					mov eax, 300
+ 0000008A  E8 00000000 E				call delay
+
+ 0000008F  B8 00000000					mov eax, black
+ 00000094  E8 00000000 E				call settextcolor
+ 00000099  FE 05 0000004F R				inc promptY
+
+ 0000009F					acceptInput:
+ 0000009F  B8 0000000F					mov eax, 15
+ 000000A4  E8 00000000 E				call delay
+
+ 000000A9  E8 00000000 E				call ReadKey
+ 000000AE  3C 01					cmp al, 1				; checks if user has input some value otherwise loop again
+
+ 000000B0  0F 8E FFFFFF4F				jle gameLoop
+							
+
+
+ 000000B6  8A 9E 00000000 R			mov bl, prompt[esi]
+ 000000BC  3A 86 00000000 R			cmp al, prompt[esi]
+ 000000C2  74 0A				je validChar
+						
+
+
+						
+
+
+ 000000C4  3C 1B			cmp al, 27d					; checks if the escape key was pressed and exits game
+ 000000C6  0F 85 FFFFFF39		jne gameLoop
+ 000000CC  74 12			je endOfProgram
+
+
+
+ 000000CE				validChar:					; if the character is alphabetical then its valid
+ 000000CE  FE 05 00000083 R			inc [storedLetterSize]
+ 000000D4  88 86 00000051 R			mov storedLetter[esi], al
+ 000000DA  46					inc esi 
+ 000000DB  E9 FFFFFF25				jmp gameloop
+
+ 000000E0				endOfProgram:
+ 000000E0  E8 00000000 E			call crlf
+ 000000E5  E8 00000000 E			call crlf
 					invoke ExitProcess,0
- 000000B9  6A 00	   *	    push   +000000000h
- 000000BB  E8 00000000 E   *	    call   ExitProcess
- 000000C0			main endp
+ 000000EA  6A 00	   *	    push   +000000000h
+ 000000EC  E8 00000000 E   *	    call   ExitProcess
+ 000000F1			main endp
+
+ 000000F1			clearStoredLetter PROC
+ 000000F1  B9 00000005			mov ecx, 5
+ 000000F6  BE 00000051 R		mov esi, OFFSET storedLetter
+ 000000FB				L1:
+ 000000FB  C7 06 00000000			mov DWORD PTR [esi], 0
+ 00000101  83 C6 04				add esi, DWORD
+ 00000104  E2 F5				loop L1
+ 00000106  C6 05 00000083 R		mov [storedLetterSize],0				; adds a zero to the front of the word so that the 
+	   00
+													; program thinks its the nullptr and doesnt show the word
+ 0000010D  C3				ret
+ 0000010E			clearStoredLetter ENDP
+
+ 0000010E			killprompt PROC
+ 0000010E  56				push esi
+ 0000010F  BE 00000000 R		mov esi, OFFSET prompt
+ 00000114  B8 00000000			mov eax, 0
+ 00000119  88 06			mov [esi], al
+ 0000011B  5E				pop esi
+ 0000011C  C6 05 00000050 R		mov [promptsize],0
+	   00
+ 00000123  C3				ret
+ 00000124			killprompt ENDP
+						
 				end main
-Microsoft (R) Macro Assembler Version 14.34.31937.0	    04/28/23 14:20:17
+Microsoft (R) Macro Assembler Version 14.34.31937.0	    04/30/23 17:51:58
 AddTwo.asm						     Symbols 2 - 1
 
 
@@ -260,8 +295,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 0000003D Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 000000C0 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000084 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000124 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -368,9 +403,15 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000C0 Public STDCALL
-  checkInput . . . . . . . . . .	L Near	 00000029 _TEXT	
-  matching . . . . . . . . . . .	L Near	 00000078 _TEXT	
+clearStoredLetter  . . . . . . .	P Near	 000000F1 _TEXT	Length= 0000001D Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 000000FB _TEXT	
+killprompt . . . . . . . . . . .	P Near	 0000010E _TEXT	Length= 00000016 Public STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000000F1 Public STDCALL
+  gameLoop . . . . . . . . . . .	L Near	 00000005 _TEXT	
+  fall . . . . . . . . . . . . .	L Near	 00000085 _TEXT	
+  acceptInput  . . . . . . . . .	L Near	 0000009F _TEXT	
+  validChar  . . . . . . . . . .	L Near	 000000CE _TEXT	
+  endOfProgram . . . . . . . . .	L Near	 000000E0 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
@@ -603,16 +644,18 @@ lightGreen . . . . . . . . . . .	Number	 0000000Ah
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
-promptX  . . . . . . . . . . . .	Byte	 00000007 _DATA	
-promptY  . . . . . . . . . . . .	Byte	 00000008 _DATA	
+prompt2  . . . . . . . . . . . .	Byte	 00000007 _DATA	
+prompt3  . . . . . . . . . . . .	Byte	 00000019 _DATA	
+promptSize . . . . . . . . . . .	Byte	 00000050 _DATA	
+promptX  . . . . . . . . . . . .	Byte	 0000004E _DATA	
+promptY  . . . . . . . . . . . .	Byte	 0000004F _DATA	
 prompt . . . . . . . . . . . . .	Byte	 00000000 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
-storedLetterX  . . . . . . . . .	Byte	 0000003B _DATA	
-storedLetterY  . . . . . . . . .	Byte	 0000003C _DATA	
-storedLetter . . . . . . . . . .	Byte	 00000009 _DATA	
+storedLetterSize . . . . . . . .	Byte	 00000083 _DATA	
+storedLetter . . . . . . . . . .	Byte	 00000051 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   
 
-	   1 Warnings
+	   0 Warnings
 	   0 Errors

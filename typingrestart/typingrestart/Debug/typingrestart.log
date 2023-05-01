@@ -1,3 +1,2 @@
 ﻿  Assembling AddTwo.asm...
-AddTwo.asm(8): warning A4011: multiple .MODEL directives found : .MODEL ignored
   typingrestart.vcxproj -> C:\Users\jessiemejia\source\repos\typingrestart\Debug\typingrestart.exe
