@@ -5,9 +5,10 @@ INCLUDE Irvine32.inc
 INCLUDE macros.inc
 
 .data
+	prompts			BYTE		"jessie is handsome", "jessie is a good programmer", "Assembly language is such a pain, I miss C plus plus"	
+
 	prompt			BYTE		"jessie", 0			; working	
-	prompt2			BYTE		"assembly language", 0
-	prompt3			BYTE		"Assembly language is such a pain, I miss C plus plus",0
+
 	promptX			BYTE		50
 	promptY			BYTE		0
 	promptSize		BYTE		6
@@ -15,11 +16,18 @@ INCLUDE macros.inc
 	storedLetter		BYTE		50 DUP (?)
 	
 	storedLetterSize	BYTE		?
+
+	missedWordsCounter	BYTE		0
+	finishedWordCounter BYTE		0
+
+	temp				BYTE		0
+
 .code
 main proc
 	
-	mov esi, 0					; counter 
-	
+	mov esi, 0				; counter
+
+
 
 	gameLoop:
 		call clrscr
@@ -28,8 +36,9 @@ main proc
 		mov eax, white
 		call setTextColor
 		mGoToXY promptX, promptY
-		mWriteString OFFSET prompt
+		;mWriteString OFFSET prompt	; for one word
 
+	
 		;Print Cover				; this is the colored text
 		mov eax, lightGreen
 		call setTextColor
@@ -40,6 +49,7 @@ main proc
 		
 		cmp promptY, 25
 		jle fall
+		jge failedprompt
 
 
 		mov bl, [promptSize]
@@ -56,6 +66,10 @@ main proc
 		call clrscr
 
 		fall:
+			mov bl, [promptSize]
+			cmp bl, [storedLetterSize]
+			je FinishedWords
+
 			mov eax, 300
 			call delay
 
@@ -122,5 +136,55 @@ killprompt PROC
 	mov [promptsize],0
 	ret
 killprompt ENDP
+
+failedprompt PROC
+.code
+
+	inc missedWordsCounter	; increased the count of how many words missed
+
+	call clrscr
+	mgotoxy promptX, promptY
+
+	mov eax, red
+	call SetTextColor	; sets the text to red
+
+	mov edx, OFFSET prompt
+	call WriteString		; writes the string in red
+
+	mov eax, 500
+	call Delay		; delay used so the text will stay on screen a half second
+
+	call Clrscr		; show red for a bit then clear the screen 
+
+	call killprompt		; this allows the prompt to not used again as its dead
+	call clearStoredLetter	; this clears the colored string and makes it ready for use again
+
+	mov eax, black
+	call setTextColor	
+	call WriteString
+	
+	ret
+failedprompt ENDP
+
+FinishedWords PROC
+.code
+	inc finishedWordCounter
+	call killprompt
+	call clearStoredLetter
+
+	mov eax, white 
+	call setTextColor
+
+	call clrscr
+
+	mov promptY, 0
+	mgotoxy promptX, promptY
+
+
+
+	ret
+
+FinishedWords ENDP
 		
+
 end main
